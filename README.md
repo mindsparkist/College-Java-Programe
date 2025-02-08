@@ -1877,3 +1877,66 @@ public class Student implements Comparable<Student> {
 
 **In simple terms:** `Comparable` is a way to tell Java, "Hey, here's how you should compare objects of this type!"  It makes sorting and ordering much easier.  It's like giving Java a specific instruction manual for how to arrange your objects in the way you want.
 
+The correct syntax for the method signature should be:
+
+```java
+public static <T extends Comparable<T>> T max(T first, T second)
+```
+
+### Explanation:
+
+1. **`<T extends Comparable<T>>`**:
+   - This is the correct way to define a generic type parameter `T` that must implement the `Comparable<T>` interface.
+   - The `extends` keyword is used in generics to specify that `T` must be a subtype of `Comparable<T>`. This ensures that the type `T` has a `compareTo` method, which is necessary for comparing two objects of type `T`.
+
+2. **Why not `implements`?**:
+   - In Java, the `implements` keyword is used for classes implementing interfaces, but in generics, the `extends` keyword is used for both classes and interfaces to specify bounds on the type parameter.
+   - Using `implements` in this context would result in a syntax error.
+
+3. **Why `Comparable<T>`?**:
+   - The `Comparable<T>` interface ensures that the type `T` can be compared to another object of the same type `T`. This is necessary for the `max` method to compare `first` and `second`.
+
+4. **Method Logic**:
+   - The method will use the `compareTo` method (provided by `Comparable<T>`) to compare `first` and `second` and return the larger of the two.
+
+### Correct Implementation:
+
+```java
+public static <T extends Comparable<T>> T max(T first, T second) {
+    if (first.compareTo(second) > 0) {
+        return first;
+    } else {
+        return second;
+    }
+}
+```
+
+### Example Usage:
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Integer a = 10;
+        Integer b = 20;
+        System.out.println(max(a, b)); // Output: 20
+
+        String x = "apple";
+        String y = "banana";
+        System.out.println(max(x, y)); // Output: banana
+    }
+
+    public static <T extends Comparable<T>> T max(T first, T second) {
+        if (first.compareTo(second) > 0) {
+            return first;
+        } else {
+            return second;
+        }
+    }
+}
+```
+
+### Summary:
+- Use `public static <T extends Comparable<T>> T max(T first, T second)` because:
+  - `extends` is the correct keyword for bounding generic types.
+  - `Comparable<T>` ensures that `T` can be compared to itself.
+  - This allows the method to work with any type that implements `Comparable<T>`, such as `Integer`, `String`, or custom classes.
